@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+Frontend/node_modules/
+Backend/node_modules/
+
+# Production builds
+dist/
+Frontend/dist/
+build/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+Frontend/.env
+Backend/.env
+
+# Database
+*.sqlite
+*.db
+Backend/*.sqlite
+Backend/*.db
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs & Debugging
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.log
+
+# OS System files
+.DS_Store
+Thumbs.db
