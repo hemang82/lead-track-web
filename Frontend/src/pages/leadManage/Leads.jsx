@@ -289,9 +289,9 @@ export default function Leads() {
         />
       </div>
 
-      {/* Table */}
-      <div className="rounded-xl bg-surface border border-border shadow-sm">
-        <table className="w-full text-left border-collapse table-fixed">
+      {/* Table Container - Mobile Responsive Scrollable */}
+      <div className="rounded-xl bg-surface border border-border shadow-sm overflow-x-auto">
+        <table className="w-full text-left border-collapse min-w-[700px]">
           <thead>
             <tr className="text-xs uppercase tracking-wider text-ink-muted border-b border-border bg-canvas/60">
               <th className="px-5 py-3.5 font-semibold w-[18%]">Lead Details</th>
