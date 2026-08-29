@@ -8,7 +8,7 @@ A modern, fast, and user-friendly B2B SaaS Lead Management application designed 
 
 - 📊 **Pipeline Analytics Dashboard**: Real-time metrics for Total, New, Contacted, Qualified, and Lost leads.
 - 🎯 **Clickable Stat Cards**: Direct auto-filter integration from dashboard stats to lead pipeline.
-- ⚡ **Interactive Leads Table**: Instant inline status updates, debounced search (500ms), and custom dropdown filters.
+- ⚡ **Interactive Leads Table & Mobile Card View**: Instant inline status updates, debounced search (500ms), and custom dropdown filters.
 - 💬 **Quick Note Action**: Add and review dynamic client interaction notes directly from the table or detail view.
 - 🛡️ **Full Form Validations**: Built using `react-hook-form` with phone number numeric restrictions & dynamic patch payloads.
 - 🎨 **Premium UI/UX**: Custom Indigo design system crafted with React JS & Tailwind CSS.
@@ -24,9 +24,42 @@ A modern, fast, and user-friendly B2B SaaS Lead Management application designed 
 
 ---
 
-## 🐳 Run with Docker (Recommended)
+## 🌐 Live URLs & Github Repository
 
-Run the entire application (Frontend + Backend) with a single command:
+- 📂 **GitHub Repository**: [https://github.com/hemang82/lead-track-web](https://github.com/hemang82/lead-track-web)
+- 🌐 **Frontend Live App**: [https://lead-track-web.vercel.app](https://lead-track-web.vercel.app)
+- ⚙️ **Backend API Live**: [https://leadtrack-backend.onrender.com](https://leadtrack-backend.onrender.com)
+
+---
+
+## 💻 Local Quick Start (`npm install && npm run dev`)
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/hemang82/lead-track-web.git
+cd lead-track-web
+```
+
+### 2. Backend Setup & Seed Data
+```bash
+cd Backend
+npm install
+npm run seed     # Injects initial dummy leads & admin user
+npm dev          # Runs on http://localhost:3005
+```
+
+### 3. Frontend Setup
+```bash
+cd Frontend
+npm install
+npm run dev      # Runs on http://localhost:5173
+```
+
+---
+
+## 🐳 Alternative: Run with Docker (1 Command)
+
+Run the entire application (Frontend + Backend) simultaneously:
 
 ```bash
 docker compose up --build
@@ -36,26 +69,55 @@ docker compose up --build
 
 ---
 
-## 💻 Manual Local Setup
+## 📡 API Endpoints & cURL Examples
 
-### 1. Clone the repository
+All API requests require the `api-key` header: `api-key: leadmanagement`.
+
+### 1. Get Dashboard Analytics Stats
 ```bash
-git clone https://github.com/your-username/lead-management.git
-cd lead-management
+curl -X GET "http://localhost:3005/api/leads/dashboard?user_id=1" \
+     -H "api-key: leadmanagement"
 ```
 
-### 2. Backend Setup
+### 2. Get All Leads (Paginated & Filtered)
 ```bash
-cd Backend
-npm install
-npm start
+curl -X GET "http://localhost:3005/api/leads?user_id=1&page=1&per_page=10&status=new" \
+     -H "api-key: leadmanagement"
 ```
-*Backend runs on `http://localhost:3005`*
 
-### 3. Frontend Setup
+### 3. Add First Lead (Create Lead)
 ```bash
-cd Frontend
-npm install
-npm run dev
+curl -X POST "http://localhost:3005/api/leads" \
+     -H "Content-Type: application/json" \
+     -H "api-key: leadmanagement" \
+     -d '{
+       "user_id": 1,
+       "name": "Hemang Patel",
+       "email": "hemang@example.com",
+       "phone": "9876543210",
+       "source": "Website",
+       "status": "new",
+       "description": "First test lead from cURL"
+     }'
 ```
-*Frontend runs on `http://localhost:5173`*
+
+### 4. Update Lead Status (Inline Status Patch)
+```bash
+curl -X PUT "http://localhost:3005/api/leads/1" \
+     -H "Content-Type: application/json" \
+     -H "api-key: leadmanagement" \
+     -d '{
+       "status": "qualified"
+     }'
+```
+
+### 5. Add Note to Lead
+```bash
+curl -X POST "http://localhost:3005/api/leads/1/notes" \
+     -H "Content-Type: application/json" \
+     -H "api-key: leadmanagement" \
+     -d '{
+       "user_id": 1,
+       "content": "Followed up via phone call, interested in pricing."
+     }'
+```
