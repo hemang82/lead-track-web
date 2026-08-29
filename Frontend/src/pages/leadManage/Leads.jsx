@@ -287,7 +287,9 @@ export default function Leads() {
           placeholder="Per Page"
           className="sm:w-40"
         />
-      </div>      {/* Desktop Table View (Hidden on mobile) */}
+      </div>
+
+      {/* Desktop Table View (Hidden on mobile) */}
       <div className="hidden sm:block rounded-xl bg-surface border border-border shadow-sm overflow-x-auto">
         <table className="w-full text-left border-collapse min-w-[700px]">
           <thead>
@@ -609,9 +611,8 @@ export default function Leads() {
           })
         )}
       </div>
-
         {!loading && (
-          <div className="flex items-center justify-between px-5 py-3.5 border-t border-border bg-canvas/30 text-sm">
+          <div className="mt-4 flex items-center justify-between px-5 py-3.5 border border-border bg-surface text-sm rounded-xl shadow-xs">
             <span className="text-xs text-ink-muted">
               Showing page <span className="font-semibold text-ink">{pagination.current_page}</span> of{" "}
               <span className="font-semibold text-ink">{pagination.total_pages}</span> ({pagination.total_records} total leads)
@@ -634,7 +635,6 @@ export default function Leads() {
             </div>
           </div>
         )}
-      </div>
 
       {addNoteModalLead && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-fadeIn">
