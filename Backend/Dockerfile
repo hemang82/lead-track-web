@@ -5,13 +5,13 @@ FROM node:20-bookworm
 WORKDIR /app
 
 # Copy package files
-COPY package*.json ./
+COPY Backend/package*.json ./
 
-# Clean install dependencies without local prebuilt cache
-RUN npm ci || npm install
+# Install dependencies
+RUN npm install
 
 # Copy application source
-COPY . .
+COPY Backend/ ./
 
 # Expose server port
 EXPOSE 3005
