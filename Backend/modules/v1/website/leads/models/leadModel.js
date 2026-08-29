@@ -10,6 +10,8 @@ const leadModel = {
 
             const user = leadModel.getUserById(req.user_id);
 
+
+
             if (!user) {
                 return sendResponse(res, STATUS.ERROR, "User not found", null);
             }
@@ -19,6 +21,9 @@ const leadModel = {
                 VALUES 
                 (@user_id, @name, @email, @phone, @source, @description, @status, @created_at, @updated_at)`);
 
+
+
+                
             const insertParam = {
                 user_id: req.user_id,
                 name: req.name,
