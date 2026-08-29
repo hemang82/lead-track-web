@@ -6,6 +6,8 @@ const apiAuthToken = require('./middleware/auth');
 const errorHandler = require('./middleware/errorHandler');
 const app = express();
 
+const db = require('./config/schema');
+
 app.use(cors());
 app.use(express.json());
 app.use('/', apiAuthToken);
