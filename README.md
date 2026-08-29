@@ -2,6 +2,8 @@
 
 A modern, fast, and user-friendly B2B SaaS Lead Management application designed to streamline sales pipelines, track prospective customer status, manage dynamic interaction notes, and visualize real-time pipeline analytics.
 
+
+
 ---
 
 ## ✨ Key Features
