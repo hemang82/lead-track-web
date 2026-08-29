@@ -290,7 +290,7 @@ export default function Leads() {
       </div>
 
       {/* Table */}
-      <div className="rounded-xl overflow-hidden bg-surface border border-border shadow-sm">
+      <div className="rounded-xl bg-surface border border-border shadow-sm">
         <table className="w-full text-left border-collapse table-fixed">
           <thead>
             <tr className="text-xs uppercase tracking-wider text-ink-muted border-b border-border bg-canvas/60">
@@ -370,7 +370,11 @@ export default function Leads() {
                           {activeStatusDropdownId === lead.id && (
                             <div
                               ref={statusDropdownRef}
-                              className="absolute left-0 mt-1.5 w-44 bg-surface border border-border rounded-xl shadow-xl z-30 py-1.5 animate-fadeIn"
+                              className={`absolute left-0 w-44 bg-surface border border-border rounded-xl shadow-2xl z-50 py-1.5 animate-fadeIn ${
+                                leads.indexOf(lead) >= leads.length - 2 && leads.length > 2
+                                  ? "bottom-full mb-1.5"
+                                  : "top-full mt-1.5"
+                              }`}
                             >
                               <div className="px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-ink-muted border-b border-border mb-1">
                                 Change Status
