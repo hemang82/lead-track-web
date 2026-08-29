@@ -287,19 +287,17 @@ export default function Leads() {
           placeholder="Per Page"
           className="sm:w-40"
         />
-      </div>
-
-      {/* Table Container - Mobile Responsive Scrollable */}
-      <div className="rounded-xl bg-surface border border-border shadow-sm overflow-x-auto">
+      </div>      {/* Desktop Table View (Hidden on mobile) */}
+      <div className="hidden sm:block rounded-xl bg-surface border border-border shadow-sm overflow-x-auto">
         <table className="w-full text-left border-collapse min-w-[700px]">
           <thead>
             <tr className="text-xs uppercase tracking-wider text-ink-muted border-b border-border bg-canvas/60">
-              <th className="px-5 py-3.5 font-semibold w-[18%]">Lead Details</th>
+              <th className="px-5 py-3.5 font-semibold w-[22%]">Lead Details</th>
               <th className="px-5 py-3.5 font-semibold hidden md:table-cell w-[24%]">Contact Info</th>
-              <th className="px-5 py-3.5 font-semibold w-[14%]">Status</th>
-              <th className="px-5 py-3.5 font-semibold hidden lg:table-cell w-[30%]">Latest Note</th>
-              <th className="px-5 py-3.5 font-semibold hidden sm:table-cell w-[8%] whitespace-nowrap">Created</th>
-              <th className="px-5 py-3.5 text-right font-semibold w-[6%] whitespace-nowrap">Actions</th>
+              <th className="px-5 py-3.5 font-semibold w-[16%]">Status</th>
+              <th className="px-5 py-3.5 font-semibold hidden lg:table-cell w-[28%]">Latest Note</th>
+              <th className="px-5 py-3.5 font-semibold hidden sm:table-cell w-[10%] whitespace-nowrap">Created</th>
+              <th className="px-5 py-3.5 text-right font-semibold w-[10%] whitespace-nowrap">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -468,6 +466,149 @@ export default function Leads() {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Card List View (Visible ONLY on mobile devices) */}
+      <div className="sm:hidden space-y-3">
+        {loading ? (
+          <div className="text-center py-10 bg-surface rounded-xl border border-border">
+            <Loader2 className="animate-spin inline text-primary" size={22} />
+            <p className="text-xs text-ink-muted mt-2">Loading leads…</p>
+          </div>
+        ) : leads.length === 0 ? (
+          <div className="text-center py-10 bg-surface rounded-xl border border-border text-sm text-ink-muted">
+            No leads found matching your criteria.
+          </div>
+        ) : (
+          leads.map((lead) => {
+            const latestNote = lead.notes && lead.notes.length > 0 ? lead.notes[0] : null;
+
+            return (
+              <div
+                key={lead.id}
+                className="bg-surface border border-border rounded-xl p-4 shadow-xs space-y-3"
+              >
+                {/* Mobile Card Header */}
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <button
+                      onClick={() => navigate(`/leads/${lead.id}`)}
+                      className="font-bold text-base text-ink hover:text-primary transition-colors text-left"
+                    >
+                      {lead.name}
+                    </button>
+                    <p className="text-[11px] text-ink-muted mt-0.5">
+                      Created: {formatDate(lead.created_at || lead.createdAt)}
+                    </p>
+                  </div>
+
+                  {/* Status Pill with Dropdown */}
+                  <div className="relative shrink-0">
+                    <button
+                      onClick={() =>
+                        setActiveStatusDropdownId(
+                          activeStatusDropdownId === lead.id ? null : lead.id
+                        )
+                      }
+                      className="cursor-pointer focus:outline-none"
+                    >
+                      <StatusPill status={lead.status} showChevron={true} />
+                    </button>
+
+                    {activeStatusDropdownId === lead.id && (
+                      <div
+                        ref={statusDropdownRef}
+                        className="absolute right-0 mt-1.5 w-44 bg-surface border border-border rounded-xl shadow-2xl z-50 py-1.5 animate-fadeIn"
+                      >
+                        <div className="px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-ink-muted border-b border-border mb-1">
+                          Change Status
+                        </div>
+                        {Object.entries(STATUS_META).map(([k, v]) => (
+                          <button
+                            key={k}
+                            onClick={() => handleInlineStatusChange(lead.id, k)}
+                            className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium text-left transition cursor-pointer hover:bg-canvas ${
+                              lead.status === k
+                                ? "text-primary bg-primary-soft/60 font-semibold"
+                                : "text-ink"
+                            }`}
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className={`w-2 h-2 rounded-full ${v.dot}`} />
+                              <span>{v.label}</span>
+                            </div>
+                            {lead.status === k && <Check size={13} className="text-primary" />}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Mobile Contact Info */}
+                <div className="bg-canvas/60 p-2.5 rounded-lg border border-border/60 text-xs space-y-1.5">
+                  <div className="flex items-center gap-2 text-ink truncate">
+                    <Mail size={13} className="text-primary shrink-0" />
+                    <span className="truncate">{lead.email}</span>
+                  </div>
+                  {lead.phone && (
+                    <div className="flex items-center gap-2 font-mono text-ink-muted">
+                      <Phone size={13} className="text-primary shrink-0" />
+                      <span>{formatPhone(lead.phone)}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Mobile Latest Note */}
+                <div className="flex items-center justify-between gap-2 pt-1 border-t border-border/40 text-xs">
+                  <div className="flex-1 min-w-0">
+                    {latestNote ? (
+                      <div className="flex items-center gap-1.5 text-ink-muted truncate">
+                        <MessageSquare size={12} className="text-primary shrink-0" />
+                        <span className="truncate text-[11px]">{latestNote.content}</span>
+                      </div>
+                    ) : (
+                      <span className="text-ink-muted/50 italic text-[11px]">No notes yet</span>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => {
+                      setAddNoteModalLead(lead);
+                      setNewNoteContent("");
+                      setNoteError("");
+                    }}
+                    className="text-primary text-[11px] font-semibold hover:underline shrink-0"
+                  >
+                    + Note
+                  </button>
+                </div>
+
+                {/* Mobile Actions Footer */}
+                <div className="flex items-center justify-end gap-2 pt-2 border-t border-border/60">
+                  <button
+                    onClick={() => navigate(`/leads/${lead.id}`)}
+                    className="flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-lg bg-canvas text-ink-muted hover:text-primary border border-border transition"
+                  >
+                    <Eye size={14} /> View
+                  </button>
+                  <button
+                    onClick={() => navigate(`/leads/${lead.id}/edit`)}
+                    className="flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-lg bg-canvas text-ink-muted hover:text-primary border border-border transition"
+                  >
+                    <Pencil size={14} /> Edit
+                  </button>
+                  <button
+                    onClick={() => setDeleteModalLead(lead)}
+                    className="flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-lg bg-red-50 text-red-600 border border-red-200 transition"
+                  >
+                    <Trash2 size={14} /> Delete
+                  </button>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
 
         {!loading && (
           <div className="flex items-center justify-between px-5 py-3.5 border-t border-border bg-canvas/30 text-sm">
