@@ -5,7 +5,7 @@ import Constant from "../lib/Constant";
 import { getUserDetails } from "../services/api.services";
 import { toast } from "sonner";
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }) {
   const navigate = useNavigate();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
@@ -62,57 +62,79 @@ export default function Sidebar() {
         : "text-ink-muted hover:text-ink hover:bg-canvas"
     }`;
 
+  const sidebarContent = (
+    <div className="flex flex-col h-full">
+      {/* Brand Logo Header */}
+      <div className="flex items-center justify-between px-2 mb-8">
+        <div className="flex items-center gap-3">
+          <img src="/favicon.svg" alt="LeadTrack Logo" className="w-8 h-8 rounded-lg" />
+          <span className="font-bold text-ink text-lg tracking-tight block leading-none">LeadTrack</span>
+        </div>
+        {onClose && (
+          <button onClick={onClose} className="md:hidden p-1 text-ink-muted hover:text-ink cursor-pointer">
+            <X size={20} />
+          </button>
+        )}
+      </div>
+
+      {/* Navigation */}
+      <div className="px-2 mb-2 text-[10px] font-bold uppercase tracking-wider text-ink-muted/80">
+        Main Menu
+      </div>
+      <nav className="flex-1 space-y-1">
+        <NavLink to="/" end onClick={onClose} className={navItemClass}>
+          <LayoutDashboard size={17} />
+          <span>Dashboard</span>
+        </NavLink>
+        <NavLink to="/leads" onClick={onClose} className={navItemClass}>
+          <Users size={17} />
+          <span>Leads</span>
+        </NavLink>
+      </nav>
+
+      {/* Footer Clickable User Profile Card */}
+      <div className="pt-4 border-t border-border mt-auto">
+        <div
+          onClick={handleProfileClick}
+          className="flex items-center gap-2.5 px-2.5 py-2 mb-2 rounded-lg bg-canvas hover:bg-primary-soft/50 border border-border/60 transition cursor-pointer group"
+          title="Click to view profile details"
+        >
+          <div className="w-8 h-8 rounded-lg bg-primary-soft text-primary font-bold text-xs flex items-center justify-center shrink-0 uppercase group-hover:bg-primary group-hover:text-white transition-colors">
+            {userName.slice(0, 2)}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-semibold text-ink truncate capitalize group-hover:text-primary transition-colors">{userName}</p>
+            <p className="text-[10px] text-ink-muted truncate">{userEmail}</p>
+          </div>
+        </div>
+
+        <button
+          onClick={() => setShowConfirmModal(true)}
+          className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+        >
+          <LogOut size={16} />
+          <span>Sign out</span>
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <>
+      {/* Desktop Sidebar */}
       <aside className="hidden md:flex flex-col w-60 shrink-0 h-screen sticky top-0 px-4 py-6 bg-surface border-r border-border">
-        {/* Brand Logo Header */}
-        <div className="flex items-center gap-3 px-2 mb-8">
-          <img src="/favicon.svg" alt="LeadTrack Logo" className="w-8 h-8 rounded-lg" />
-          <div>
-            <span className="font-bold text-ink text-lg tracking-tight block leading-none">LeadTrack</span>
-          </div>
-        </div>
-
-        {/* Navigation */}
-        <div className="px-2 mb-2 text-[10px] font-bold uppercase tracking-wider text-ink-muted/80">
-          Main Menu
-        </div>
-        <nav className="flex-1 space-y-1">
-          <NavLink to="/" end className={navItemClass}>
-            <LayoutDashboard size={17} />
-            <span>Dashboard</span>
-          </NavLink>
-          <NavLink to="/leads" className={navItemClass}>
-            <Users size={17} />
-            <span>Leads</span>
-          </NavLink>
-        </nav>
-
-        {/* Footer Clickable User Profile Card */}
-        <div className="pt-4 border-t border-border mt-auto">
-          <div
-            onClick={handleProfileClick}
-            className="flex items-center gap-2.5 px-2.5 py-2 mb-2 rounded-lg bg-canvas hover:bg-primary-soft/50 border border-border/60 transition cursor-pointer group"
-            title="Click to view profile details"
-          >
-            <div className="w-8 h-8 rounded-lg bg-primary-soft text-primary font-bold text-xs flex items-center justify-center shrink-0 uppercase group-hover:bg-primary group-hover:text-white transition-colors">
-              {userName.slice(0, 2)}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-ink truncate capitalize group-hover:text-primary transition-colors">{userName}</p>
-              <p className="text-[10px] text-ink-muted truncate">{userEmail}</p>
-            </div>
-          </div>
-
-          <button
-            onClick={() => setShowConfirmModal(true)}
-            className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
-          >
-            <LogOut size={16} />
-            <span>Sign out</span>
-          </button>
-        </div>
+        {sidebarContent}
       </aside>
+
+      {/* Mobile Drawer Sidebar */}
+      {isOpen && (
+        <div className="fixed inset-0 z-50 md:hidden flex">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity" onClick={onClose} />
+          <aside className="relative flex flex-col w-72 h-full bg-surface p-6 shadow-2xl z-10 animate-slideRight">
+            {sidebarContent}
+          </aside>
+        </div>
+      )}
 
       {/* User Details Profile Modal */}
       {showUserModal && (
